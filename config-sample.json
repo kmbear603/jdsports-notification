@@ -1,0 +1,9 @@
+{
+    "query": [ "ultraboost", "pureboost" ],
+    "sender":
+    {
+        "id": "kmbear603",
+        "password": "kmbear603s-secret-password"
+    },
+    "recipient": [ "larry@google.com", "tcook@apple.com" ]
+}
