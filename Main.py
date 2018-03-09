@@ -155,7 +155,8 @@ class Engine:
 
     @classmethod
     def _is_changed(cls, compare_result):
-        return len(compare_result["new"]) > 0 or len(compare_result["removed"]) > 0 or len(compare_result["changed"]) > 0
+        #return len(compare_result["new"]) > 0 or len(compare_result["removed"]) > 0 or len(compare_result["changed"]) > 0
+        return len(compare_result["new"]) > 0 or len(compare_result["changed"]) > 0
 
     @classmethod
     def _show_status(cls, msg):
@@ -165,23 +166,26 @@ class Engine:
         last_products = None
 
         while True:
-            self._show_status("downloading products")
-            products = self._update_product_list()
-            self._show_status("found " + str(len(products)) + " products")
+            try:
+                self._show_status("downloading products")
+                products = self._update_product_list()
+                self._show_status("found " + str(len(products)) + " products")
 
-            if not last_products is None:
-                compare_result = self._compare_products(products, last_products)
-                if self._is_changed(compare_result):
-                    self._show_status("changed, sending email")
-                    try:
-                        self._send_email(compare_result)
-                        self._show_status("sent email")
-                    except:
-                        self._show_status("failed to send email")
-                else:
-                    self._show_status("no change")
+                if not last_products is None:
+                    compare_result = self._compare_products(products, last_products)
+                    if self._is_changed(compare_result):
+                        self._show_status("changed, sending email")
+                        try:
+                            self._send_email(compare_result)
+                            self._show_status("sent email")
+                        except:
+                            self._show_status("failed to send email")
+                    else:
+                        self._show_status("no change")
 
-            last_products = products
+                last_products = products
+            except Exception as e:
+                self._show_status("failed: " + str(e))
             
             self._show_status("sleep 5 minutes")
             sleep(300)
