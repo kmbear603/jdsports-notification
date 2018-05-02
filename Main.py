@@ -187,8 +187,8 @@ class Engine:
             except Exception as e:
                 self._show_status("failed: " + str(e))
             
-            self._show_status("sleep 5 minutes")
-            sleep(300)
+            self._show_status("sleep 2 minutes")
+            sleep(120)
 
 if __name__ == "__main__":
     engine = Engine()
