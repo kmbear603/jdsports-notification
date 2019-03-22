@@ -3,6 +3,7 @@
 import urllib.request
 import urllib.parse
 import pyquery
+import requests
 
 class JDSports:
     """ JD Sports UK """
@@ -28,17 +29,25 @@ class JDSports:
         base_url = domain + "/search/" + query.replace(" ", "+") + "/?sort=price-low-high"
 
         hdrs = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36",
+            "Connection": "keep-alive",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+            "accept-encoding": "gzip, deflate, br",
+            'Accept-Language': 'en-US,en;q=0.5',
+            "upgrade-insecure-requests": "1",
         }
+
+        session = requests.Session()
 
         while True:
             if start_index > 0:
                 url = base_url + "&from=" + str(start_index)
             else:
                 url = base_url
-            req = urllib.request.Request(url, None, hdrs)
+
             try:
-                html = urllib.request.urlopen(req).read()
+                res = session.get(url=url, headers=hdrs)
+                html = res.text
             except urllib.request.HTTPError as e:
                 if e.code == 404:
                     break
@@ -48,7 +57,7 @@ class JDSports:
 
             product_element_list = dom(".productListItem")
 
-            if product_element_list is None:
+            if product_element_list is None or len(product_element_list) == 0:
                 break
             
             for product_element in product_element_list:
