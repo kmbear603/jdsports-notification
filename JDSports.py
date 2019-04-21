@@ -86,7 +86,7 @@ class JDSports:
                     raise "more than two span[@data-oi-price] are found"
 
                 img_element = dom(".thumbnail", product_element)
-                item["img"] = urllib.parse.urljoin(base_url, img_element.attr("src"))
+                item["img"] = urllib.parse.urljoin(base_url, img_element.attr("data-src"))
 
                 duplicated = False
                 for i in items:
